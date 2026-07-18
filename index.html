@@ -175,6 +175,12 @@
 
 <!-- DAILY CHECKLIST -->
 <div class="section" style="margin:16px;background:#1a2332;border:1px solid #2563eb">
+  <div class="section-title">⚖️ Morning Weigh-In</div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:8px;background:#0f172a;border-radius:8px">
+    <input class="set-input" id="daily-weight" style="width:80px;font-size:18px;text-align:center;font-weight:700" placeholder="63.0">
+    <span style="color:#94a3b8;font-size:14px">kg</span>
+    <span style="color:#64748b;font-size:11px;margin-left:auto">After bathroom, before food</span>
+  </div>
   <div class="section-title">✅ Daily Checklist</div>
   <ul class="checklist">
     <li><input type="checkbox" class="check-input"> Protein: ~100-128g</li>
@@ -255,6 +261,7 @@ function goToday(){
 function clearAllFields(){
   document.querySelectorAll('.day-content').forEach(el=>{el.querySelectorAll('input,textarea').forEach(i=>{if(i.type==='checkbox')i.checked=false;else i.value='';});el.querySelectorAll('select').forEach(s=>s.selectedIndex=0);});
   document.querySelectorAll('.checklist input[type=checkbox]').forEach(c=>c.checked=false);
+  document.getElementById('daily-weight').value='';
 }
 function saveData(){
   const ds=dateStr(viewDate);
@@ -262,10 +269,11 @@ function saveData(){
   el.querySelectorAll('input,select,textarea').forEach((inp,i)=>{if(inp.type==='checkbox')data[cDay+'_'+i]=inp.checked;else data[cDay+'_'+i]=inp.value;});
   const chk={};document.querySelectorAll('.checklist input[type=checkbox]').forEach((c,i)=>{chk['chk_'+i]=c.checked;});
   data._checklist=chk;
+  data._weight=document.getElementById('daily-weight').value;
   localStorage.setItem('t_'+cDay+'_'+ds,JSON.stringify(data));
   const btn=document.querySelector('.save-btn.primary');btn.textContent='✅ Saved!';setTimeout(()=>btn.textContent='💾 Save',1500);
 }
-function clearDay(){if(!confirm('Clear all data for this day?'))return;const ds=dateStr(viewDate);const el=document.getElementById('day-'+cDay);el.querySelectorAll('input,textarea').forEach(i=>{if(i.type==='checkbox')i.checked=false;else i.value='';});el.querySelectorAll('select').forEach(s=>s.selectedIndex=0);document.querySelectorAll('.checklist input[type=checkbox]').forEach(c=>c.checked=false);localStorage.removeItem('t_'+cDay+'_'+ds);}
+function clearDay(){if(!confirm('Clear all data for this day?'))return;const ds=dateStr(viewDate);const el=document.getElementById('day-'+cDay);el.querySelectorAll('input,textarea').forEach(i=>{if(i.type==='checkbox')i.checked=false;else i.value='';});el.querySelectorAll('select').forEach(s=>s.selectedIndex=0);document.querySelectorAll('.checklist input[type=checkbox]').forEach(c=>c.checked=false);document.getElementById('daily-weight').value='';localStorage.removeItem('t_'+cDay+'_'+ds);}
 function loadData(){
   const ds=dateStr(viewDate);
   ['sun','mon','tue','wed','thu','fri','sat'].forEach(day=>{
@@ -273,6 +281,7 @@ function loadData(){
     if(saved){const data=JSON.parse(saved);const el=document.getElementById('day-'+day);
       el.querySelectorAll('input,select,textarea').forEach((inp,i)=>{const v=data[day+'_'+i];if(v!==undefined){if(inp.type==='checkbox')inp.checked=v;else inp.value=v;}});
       if(data._checklist){document.querySelectorAll('.checklist input[type=checkbox]').forEach((c,i)=>{const v=data._checklist['chk_'+i];if(v!==undefined)c.checked=v;});}
+      if(data._weight){document.getElementById('daily-weight').value=data._weight;}
     }
   });
 }
