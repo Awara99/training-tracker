@@ -68,7 +68,7 @@
   .date-display { font-size: 14px; font-weight: 600; color: #e2e8f0; min-width: 140px; text-align: center; }
   .date-sub { font-size: 10px; color: #64748b; display: block; }
   .date-today-btn { background: #2563eb; border: none; color: white; font-size: 11px; padding: 4px 10px; border-radius: 12px; cursor: pointer; }
-  .date-today-btn.hidden { display: none; }
+  .date-today-btn.on-today { background: #334155; color: #64748b; cursor: default; }
   .date-week-btn { background: transparent; border: 1px solid #475569; color: #94a3b8; font-size: 11px; padding: 4px 8px; border-radius: 12px; cursor: pointer; }
   .date-week-btn:active { background: #334155; }
   .last-week-val { font-size: 11px; color: #4ade80; font-style: italic; margin-top: 2px; display: block; }
@@ -206,14 +206,35 @@ const todayStr=()=>new Date().toISOString().split('T')[0];
 const dateStr=(d)=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+dd;};
 const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const PROGRAM_START=new Date(2026,6,19); // July 19, 2026 (month is 0-indexed)
+function getPhaseForDate(d){
+  const diff=Math.floor((d.getTime()-PROGRAM_START.getTime())/86400000);
+  if(diff<0) return 1; // before program starts
+  const week=Math.floor(diff/7)+1; // week 1-12
+  if(week<=2) return 1;
+  if(week===3) return 2;
+  if(week<=6) return 3;
+  if(week===7) return 4;
+  if(week<=10) return 5;
+  return 6; // weeks 11-12+
+}
+function getWeekNum(d){
+  const diff=Math.floor((d.getTime()-PROGRAM_START.getTime())/86400000);
+  if(diff<0) return 0;
+  return Math.floor(diff/7)+1;
+}
 function updateDateDisplay(){
   const ds=dateStr(viewDate);const isToday=ds===todayStr();
   const disp=document.getElementById('dateDisplay');
   const sub=document.getElementById('dateSub');
   const tbtn=document.getElementById('todayBtn');
-  if(isToday){disp.textContent='📅 Today';} else {disp.textContent=dayNames[viewDate.getDay()]+', '+monthNames[viewDate.getMonth()]+' '+viewDate.getDate();}
-  sub.textContent=isToday?dateStr(viewDate):'';
-  tbtn.classList.toggle('hidden',isToday);
+  const wk=getWeekNum(viewDate);
+  const wkLabel=wk>0&&wk<=12?' — Week '+wk:wk>12?' — Post-program':'';
+  if(isToday){disp.textContent='📅 Today';sub.textContent=dateStr(viewDate)+wkLabel;} else {disp.textContent=dayNames[viewDate.getDay()]+', '+monthNames[viewDate.getMonth()]+' '+viewDate.getDate();sub.textContent=wkLabel.trim();}
+  tbtn.classList.toggle('on-today',isToday);
+  // Auto-switch phase
+  const autoPhase=getPhaseForDate(viewDate);
+  setPhase(autoPhase);
 }
 function shiftDate(days){
   clearAllFields();
@@ -255,7 +276,7 @@ function loadData(){
     }
   });
 }
-const dayMap=['sun','mon','tue','wed','thu','fri','sat'];showDay(dayMap[new Date().getDay()]);updateDateDisplay();loadData();setPhase(1);
+const dayMap=['sun','mon','tue','wed','thu','fri','sat'];showDay(dayMap[new Date().getDay()]);updateDateDisplay();loadData();
 </script>
 </body>
 </html>
