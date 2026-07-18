@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>12-Week Training Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; font-size: 15px; padding-bottom: 80px; }
+  .header { background: #1e293b; padding: 16px; text-align: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
+  .header h1 { font-size: 16px; color: #60a5fa; margin-bottom: 8px; }
+  .phase-selector { display: flex; gap: 4px; justify-content: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .phase-btn { padding: 6px 10px; border-radius: 20px; border: 1px solid #475569; background: transparent; color: #94a3b8; font-size: 11px; cursor: pointer; }
+  .phase-btn.active { background: #2563eb; border-color: #2563eb; color: white; }
+  .week-info { font-size: 11px; color: #64748b; }
+  .day-tabs { display: flex; overflow-x: auto; background: #1e293b; padding: 8px 8px 0; gap: 4px; position: sticky; top: 88px; z-index: 99; }
+  .day-tab { padding: 10px 14px; border-radius: 8px 8px 0 0; border: none; background: #334155; color: #94a3b8; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+  .day-tab.active { background: #0f172a; color: #60a5fa; }
+  .day-tab.rest-day { color: #4ade80; }
+  .day-content { display: none; padding: 16px; }
+  .day-content.active { display: block; }
+  .section { background: #1e293b; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .section-title { font-size: 13px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .section-subtitle { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+  .exercise { background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+  .exercise-name { font-weight: 700; font-size: 14px; color: #f1f5f9; margin-bottom: 2px; }
+  .exercise-detail { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+  .exercise-note { font-size: 11px; color: #64748b; font-style: italic; margin-bottom: 6px; }
+  .sets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; }
+  .set-box { text-align: center; }
+  .set-label { font-size: 10px; color: #64748b; margin-bottom: 2px; }
+  .set-input { width: 100%; padding: 8px 4px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; font-size: 14px; text-align: center; }
+  .set-input:focus { border-color: #2563eb; outline: none; }
+  .set-input::placeholder { color: #475569; font-size: 11px; }
+  .rpe-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .rpe-label { font-size: 12px; color: #94a3b8; }
+  .rpe-select { padding: 6px 10px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; font-size: 14px; }
+  .warmup-list { list-style: none; }
+  .warmup-list li { padding: 4px 0; font-size: 13px; color: #cbd5e1; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 8px; }
+  .warmup-list li:last-child { border: none; }
+  .warmup-check { width: 18px; height: 18px; accent-color: #2563eb; flex-shrink: 0; }
+  .checklist { list-style: none; }
+  .checklist li { padding: 8px 0; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 10px; }
+  .checklist li:last-child { border: none; }
+  .check-input { width: 22px; height: 22px; accent-color: #22c55e; flex-shrink: 0; }
+  .rest-content { text-align: center; padding: 40px 20px; }
+  .rest-icon { font-size: 48px; margin-bottom: 16px; }
+  .rest-title { font-size: 20px; font-weight: 700; color: #4ade80; margin-bottom: 8px; }
+  .rest-desc { font-size: 14px; color: #94a3b8; line-height: 1.6; }
+  .recovery-option { background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: pointer; border: 2px solid transparent; }
+  .recovery-option.selected { border-color: #2563eb; }
+  .recovery-option h4 { font-size: 14px; color: #f1f5f9; margin-bottom: 4px; }
+  .recovery-option p { font-size: 12px; color: #94a3b8; }
+  .superset-badge { display: inline-block; background: #7c3aed; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+  .primer-badge { display: inline-block; background: #d97706; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+  .core-badge { display: inline-block; background: #059669; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+  .notes-area { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 13px; min-height: 60px; resize: vertical; margin-top: 8px; font-family: inherit; }
+  .notes-area:focus { border-color: #2563eb; outline: none; }
+  .save-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; padding: 12px 16px; display: flex; gap: 8px; border-top: 1px solid #334155; z-index: 100; }
+  .save-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .save-btn.primary { background: #2563eb; color: white; }
+  .save-btn.secondary { background: #334155; color: #94a3b8; }
+  .timer-btn { background: #334155; border: none; color: #94a3b8; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .timer-display { font-size: 20px; color: #fbbf24; font-weight: 700; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>12-WEEK PRECONCEPTION PROGRAM</h1>
+  <div class="phase-selector">
+    <button class="phase-btn active" onclick="setPhase(1)">Wks 1-2</button>
+    <button class="phase-btn" onclick="setPhase(2)">Wk3 DL</button>
+    <button class="phase-btn" onclick="setPhase(3)">Wks 4-6</button>
+    <button class="phase-btn" onclick="setPhase(4)">Wk7 DL</button>
+    <button class="phase-btn" onclick="setPhase(5)">Wks 8-10</button>
+    <button class="phase-btn" onclick="setPhase(6)">Wks 11-12</button>
+  </div>
+  <div class="week-info" id="phaseInfo">Phase 1: Rebuild — RPE 6-7 — 6-10 reps</div>
+</div>
+<div class="day-tabs">
+  <button class="day-tab active" onclick="showDay('sun')">SUN</button>
+  <button class="day-tab" onclick="showDay('mon')">MON</button>
+  <button class="day-tab rest-day" onclick="showDay('tue')">TUE</button>
+  <button class="day-tab rest-day" onclick="showDay('wed')">WED</button>
+  <button class="day-tab" onclick="showDay('thu')">THU</button>
+  <button class="day-tab rest-day" onclick="showDay('fri')">FRI</button>
+  <button class="day-tab" onclick="showDay('sat')">SAT</button>
+</div>
+
+<!-- SUNDAY -->
+<div class="day-content active" id="day-sun">
+  <div class="section"><div class="section-title">☀️ Sunday — Lower Body Strength</div><div class="section-subtitle">60-70 min | Squat Focus</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Row/bike: 3 min easy</li><li><input type="checkbox" class="warmup-check"> Banded lateral walks: 10/side</li><li><input type="checkbox" class="warmup-check"> Goblet squat: 8 reps</li><li><input type="checkbox" class="warmup-check"> Hip 90/90 switches: 5/side</li><li><input type="checkbox" class="warmup-check"> Glute bridges: 10</li></ul></div>
+  <div class="section"><div class="section-title">★ Hang Power Clean <span class="primer-badge">POWER PRIMER</span></div><div class="exercise-note" id="sun-hpc-info">Wks 1-2: 4x3 @ RPE 6-7 | Rest 90s</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">Set 1</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 2</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 3</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 4</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 5</div><input class="set-input" placeholder="kg"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option></select></div></div></div>
+  <div class="section"><div class="section-title">A. Back Squat — PRIMARY</div><div class="exercise-note" id="sun-sq-info">Wks 1-2: 4x6-8 @ RPE 7 | Rest 2.5 min</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">Set 1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 3</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 4</div><input class="set-input" placeholder="kg x reps"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option><option>9</option></select><button class="timer-btn" onclick="startTimer(this,150)">⏱ 2:30</button></div></div></div>
+  <div class="section"><div class="section-title">B. Romanian Deadlift</div><div class="exercise-note" id="sun-rdl-info">Wks 1-2: 3x8-10 @ RPE 7 | Rest 2 min</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">Set 1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 3</div><input class="set-input" placeholder="kg x reps"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option></select><button class="timer-btn" onclick="startTimer(this,120)">⏱ 2:00</button></div></div></div>
+  <div class="section"><div class="section-title">C. Superset <span class="superset-badge">SUPERSET</span></div><div class="exercise-note">2 min rest between supersets</div><div class="exercise"><div class="exercise-name">C1. Bulgarian Split Squat (DB) — 3x7-8/leg</div><div class="sets-grid"><div class="set-box"><div class="set-label">Set 1</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 2</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 3</div><input class="set-input" placeholder="kg"></div></div></div><div class="exercise"><div class="exercise-name">C2. Hip Thrust — 3x12</div><div class="sets-grid"><div class="set-box"><div class="set-label">Set 1</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 2</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">Set 3</div><input class="set-input" placeholder="kg"></div></div></div></div>
+  <div class="section"><div class="section-title">D. Core <span class="core-badge">CORE</span></div><div class="exercise-note">2 rounds, no rest</div><div class="exercise"><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Dead Bug: 8/side</li><li><input type="checkbox" class="warmup-check"> Pallof Press: 15s/side</li><li><input type="checkbox" class="warmup-check"> Side Plank: 20s/side</li><li><input type="checkbox" class="warmup-check"> Round 2 complete</li></ul></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" placeholder="How did the session feel?"></textarea></div>
+</div>
+
+<!-- MONDAY -->
+<div class="day-content" id="day-mon">
+  <div class="section"><div class="section-title">💪 Monday — Upper Body + Pull-Up</div><div class="section-subtitle">60-70 min | Press & Pull Focus</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Row/bike: 3 min easy</li><li><input type="checkbox" class="warmup-check"> Band pull-aparts: 15</li><li><input type="checkbox" class="warmup-check"> Scapular push-ups: 10</li><li><input type="checkbox" class="warmup-check"> Thoracic rotation: 8/side</li><li><input type="checkbox" class="warmup-check"> Band ext. rotation: 10/side</li></ul></div>
+  <div class="section"><div class="section-title">A. Strict Press — PRIMARY</div><div class="exercise-note" id="mon-press-info">Wks 1-2: 4x6-8 @ RPE 7 | Rest 2.5 min</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">Set 1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 3</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">Set 4</div><input class="set-input" placeholder="kg x reps"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option><option>9</option></select><button class="timer-btn" onclick="startTimer(this,150)">⏱ 2:30</button></div></div></div>
+  <div class="section"><div class="section-title">B. Pull-Up Progression</div><div class="exercise-note" id="mon-pu-info">Wks 1-2: Band 3x5 + Eccentrics 3x3 (3-5s) | Rest 2 min</div><div class="exercise"><div class="exercise-name">Band-Assisted Pull-Ups</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="reps"></div></div><div class="exercise-name" style="margin-top:10px">Eccentric Negatives</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="reps x sec"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="reps x sec"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="reps x sec"></div></div><div class="exercise-note" style="margin-top:6px">Band: <input class="set-input" style="width:100px;display:inline" placeholder="color"></div></div></div>
+  <div class="section"><div class="section-title">C. Superset <span class="superset-badge">SUPERSET</span></div><div class="exercise"><div class="exercise-name">C1. DB Bench Press — 3x8-10</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg x reps"></div></div></div><div class="exercise"><div class="exercise-name">C2. Single-Arm DB Row — 3x8/arm</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg x reps"></div></div></div></div>
+  <div class="section"><div class="section-title">D. Finisher</div><div class="exercise"><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Face Pulls: 2x15</li><li><input type="checkbox" class="warmup-check"> Dead Hang: 2x20-30 sec</li></ul></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" placeholder="Pull-up progress? How did pressing feel?"></textarea></div>
+</div>
+
+<!-- TUESDAY -->
+<div class="day-content" id="day-tue">
+  <div class="section"><div class="section-title">🧘 Tuesday — Active Recovery</div><div class="section-subtitle">30-45 min | Choose one</div></div>
+  <div class="section"><div class="section-title">Choose Recovery</div><div class="recovery-option selected" onclick="selectRecovery(this)"><h4>🅰️ Zone 2 + Mobility</h4><p>20-30 min easy cardio (HR 120-140) + 10-15 min mobility</p></div><div class="recovery-option" onclick="selectRecovery(this)"><h4>🅱️ PF/Core + Walk</h4><p>15 min pelvic floor/core + 20 min walk</p></div><div class="recovery-option" onclick="selectRecovery(this)"><h4>🅲 Pilates Class</h4><p>Mat or reformer — core, PF, flexibility</p></div><div class="recovery-option" onclick="selectRecovery(this)"><h4>🅳 Yoga/Stretch</h4><p>30 min gentle flow</p></div></div>
+  <div class="section"><div class="section-title">If Option B — PF/Core</div><div class="exercise"><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Breathing + PF Lift: 3x8 breaths</li><li><input type="checkbox" class="warmup-check"> Bird Dog: 3x6/side, 3s hold</li><li><input type="checkbox" class="warmup-check"> Belly Lift: 3x8, 5s hold</li><li><input type="checkbox" class="warmup-check"> Copenhagen Plank: 2x12-15s/side</li><li><input type="checkbox" class="warmup-check"> Clamshell: 2x15/side</li></ul></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" placeholder="What did you do?"></textarea></div>
+</div>
+
+<!-- WEDNESDAY -->
+<div class="day-content" id="day-wed"><div class="rest-content"><div class="rest-icon">😴</div><div class="rest-title">REST DAY</div><div class="rest-desc">Walk if desired. Prioritize sleep.</div></div></div>
+
+<!-- THURSDAY -->
+<div class="day-content" id="day-thu">
+  <div class="section"><div class="section-title">🔥 Thursday — Lower + Posterior Chain</div><div class="section-subtitle">60-70 min | Deadlift Focus</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Bike/row: 3 min easy</li><li><input type="checkbox" class="warmup-check"> Cossack squats: 6/side</li><li><input type="checkbox" class="warmup-check"> SL glute bridge: 8/side</li><li><input type="checkbox" class="warmup-check"> Cat-cow: 8</li><li><input type="checkbox" class="warmup-check"> Ankle mobilization: 10/side</li></ul></div>
+  <div class="section"><div class="section-title">★ Hang Power Snatch <span class="primer-badge">OPT B ONLY</span></div><div class="exercise-note" id="thu-hps-info">Wks 1-2: 4x3 @ RPE 6 | Rest 90s | Skip if Option A</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S4</div><input class="set-input" placeholder="kg"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option></select></div></div></div>
+  <div class="section"><div class="section-title">A. Deadlift — PRIMARY</div><div class="exercise-note" id="thu-dl-info">Wks 1-2: 4x6-8 @ RPE 7 | Rest 2.5 min</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S4</div><input class="set-input" placeholder="kg x reps"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option><option>9</option></select><button class="timer-btn" onclick="startTimer(this,150)">⏱ 2:30</button></div></div></div>
+  <div class="section"><div class="section-title">B. Walking Lunges (DB)</div><div class="exercise-note">3x8-10/leg @ RPE 7 | Rest 2 min</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg"></div></div></div></div>
+  <div class="section"><div class="section-title">C. Superset <span class="superset-badge">SUPERSET</span></div><div class="exercise"><div class="exercise-name">C1. Single-Leg RDL — 3x8/leg</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg"></div></div></div><div class="exercise"><div class="exercise-name">C2. Nordic Curl / GHR — 3x4-6</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="reps"></div></div></div></div>
+  <div class="section"><div class="section-title">D. Core + PF <span class="core-badge">CORE+PF</span></div><div class="exercise-note">2 rounds</div><div class="exercise"><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Dead Bug: 8/side</li><li><input type="checkbox" class="warmup-check"> Copenhagen Plank: 15-20s/side</li><li><input type="checkbox" class="warmup-check"> Breathing + PF Lift: 8 breaths</li><li><input type="checkbox" class="warmup-check"> Round 2 complete</li></ul></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" placeholder="Deadlift progress? Energy level?"></textarea></div>
+</div>
+
+<!-- FRIDAY -->
+<div class="day-content" id="day-fri"><div class="rest-content"><div class="rest-icon">😴</div><div class="rest-title">REST DAY</div><div class="rest-desc">Walk if desired. Tomorrow is upper body.</div></div></div>
+
+<!-- SATURDAY -->
+<div class="day-content" id="day-sat">
+  <div class="section"><div class="section-title">⚡ Saturday — Upper Body + Conditioning</div><div class="section-subtitle">65-70 min | Row & Pull + Conditioning</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check"> Row/bike: 3 min easy</li><li><input type="checkbox" class="warmup-check"> Band pull-aparts: 15</li><li><input type="checkbox" class="warmup-check"> Scapular pull-ups: 8</li><li><input type="checkbox" class="warmup-check"> Thoracic foam roll: 1 min</li><li><input type="checkbox" class="warmup-check"> PVC pass-throughs: 10</li></ul></div>
+  <div class="section"><div class="section-title">A. Barbell Row — PRIMARY</div><div class="exercise-note" id="sat-row-info">Wks 1-2: 4x8-10 @ RPE 7 | Rest 2 min</div><div class="exercise"><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S4</div><input class="set-input" placeholder="kg x reps"></div></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option><option>9</option></select><button class="timer-btn" onclick="startTimer(this,120)">⏱ 2:00</button></div></div></div>
+  <div class="section"><div class="section-title">B. Pull-Up Supplementary</div><div class="exercise"><div class="exercise-name">B1. Lat Pulldown — 3x8-10</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg x reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg x reps"></div></div></div><div class="exercise"><div class="exercise-name">B2. Band Chin-Ups — 3x4-6</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="reps"></div></div><div class="exercise-note">Band: <input class="set-input" style="width:100px;display:inline" placeholder="color"></div></div></div>
+  <div class="section"><div class="section-title">C. Superset <span class="superset-badge">SUPERSET</span></div><div class="exercise"><div class="exercise-name">C1. Push-Ups — 3x8-12</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="reps"></div></div></div><div class="exercise"><div class="exercise-name">C2. Farmer's Carry — 3x30-35m</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" placeholder="kg/hand"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" placeholder="kg/hand"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" placeholder="kg/hand"></div></div></div></div>
+  <div class="section"><div class="section-title">D. Conditioning (8-10 min)</div><div class="exercise-note" id="sat-cond-info">Wks 1-2: 3 rds easy — 8 cal row + 8 KB swings + 8 step-ups</div><div class="exercise"><div class="exercise-name">Result:</div><input class="set-input" style="width:100%;margin-top:4px" placeholder="Time or rounds"><div class="rpe-row"><span class="rpe-label">Effort:</span><select class="rpe-select"><option>-</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" placeholder="Conditioning performance? Energy?"></textarea></div>
+</div>
+
+<!-- DAILY CHECKLIST -->
+<div class="section" style="margin:16px;background:#1a2332;border:1px solid #2563eb">
+  <div class="section-title">✅ Daily Checklist</div>
+  <ul class="checklist">
+    <li><input type="checkbox" class="check-input"> Protein: ~100-128g</li>
+    <li><input type="checkbox" class="check-input"> Post-workout shake</li>
+    <li><input type="checkbox" class="check-input"> Creatine: 5g</li>
+    <li><input type="checkbox" class="check-input"> Folate supplement</li>
+    <li><input type="checkbox" class="check-input"> Sleep: 7+ hours</li>
+    <li><input type="checkbox" class="check-input"> Walk: 20+ min</li>
+    <li><input type="checkbox" class="check-input"> Water: 2.5L+</li>
+    <li><input type="checkbox" class="check-input"> Dead hang practice</li>
+  </ul>
+</div>
+
+<div class="save-bar">
+  <button class="save-btn primary" onclick="saveData()">💾 Save</button>
+  <button class="save-btn secondary" onclick="clearDay()">🗑 Clear</button>
+</div>
+
+<script>
+const phaseData={1:'Phase 1: Rebuild (Wks 1-2) — RPE 6-7 — 6-10 reps',2:'⚡ DELOAD Wk 3 (Period) — RPE 6-7 — 2 sets/exercise',3:'Phase 2: Strengthen (Wks 4-6) — RPE 7-8.5 — 4-6 reps',4:'⚡ DELOAD Wk 7 (Period) — RPE 7 — 2 sets/exercise',5:'Phase 3: Realize (Wks 8-10) — RPE 8-9 — 3-5 reps',6:'Wks 11-12: Off pill + Reverse diet — RPE 7.5-9'};
+const info={1:{'sun-hpc':'Wks 1-2: 4x3 @ RPE 6-7 | 90s','sun-sq':'Wks 1-2: 4x6-8 @ RPE 7 | 2.5 min','sun-rdl':'Wks 1-2: 3x8-10 @ RPE 7 | 2 min','mon-press':'Wks 1-2: 4x6-8 @ RPE 7 | 2.5 min','mon-pu':'Wks 1-2: Band 3x5 + Ecc 3x3 (3-5s) | 2 min','thu-hps':'Wks 1-2: 4x3 @ RPE 6 | 90s','thu-dl':'Wks 1-2: 4x6-8 @ RPE 7 | 2.5 min','sat-row':'Wks 1-2: 4x8-10 @ RPE 7 | 2 min','sat-cond':'Wks 1-2: 3 rds easy — 8 row + 8 KB + 8 steps'},2:{'sun-hpc':'DELOAD: 2x3 @ RPE 6','sun-sq':'DELOAD: 2x6-8 @ RPE 6-7','sun-rdl':'DELOAD: 2x8-10 @ RPE 6-7','mon-press':'DELOAD: 2x6-8 @ RPE 6-7','mon-pu':'DELOAD: Band 2x5 + Ecc 2x3','thu-hps':'DELOAD: 2x3 @ RPE 6','thu-dl':'DELOAD: 2x6-8 @ RPE 6-7','sat-row':'DELOAD: 2x8-10 @ RPE 6-7','sat-cond':'DELOAD: 20 min Zone 2 instead'},3:{'sun-hpc':'Wks 4-6: 5x2-3 @ RPE 7 | 90s','sun-sq':'Wks 4-6: 4x4-6 @ RPE 8 | 3 min','sun-rdl':'Wks 4-6: 3x6-8 @ RPE 7.5 | 2.5 min','mon-press':'Wks 4-6: 4x4-6 @ RPE 8 | 3 min','mon-pu':'Wks 4-6: Light band 3x4-5 + Ecc 3x3 (5-8s)','thu-hps':'Wks 4-6: 4x2-3 @ RPE 7 | 90s','thu-dl':'Wks 4-6: 4x4-6 @ RPE 8 | 3 min','sat-row':'Wks 4-6: 4x6-8 @ RPE 8 | 2.5 min','sat-cond':'Wks 4-6: EMOM 8 — Odd: 6KB+3burp; Even: 10 bike'},4:{'sun-hpc':'DELOAD: 2x2-3 @ RPE 6','sun-sq':'DELOAD: 2x4-6 @ RPE 7','sun-rdl':'DELOAD: 2x6-8 @ RPE 7','mon-press':'DELOAD: 2x4-6 @ RPE 7','mon-pu':'DELOAD: Light band 2x4-5 + Ecc 2x3','thu-hps':'DELOAD: 2x2-3 @ RPE 6','thu-dl':'DELOAD: 2x4-6 @ RPE 7','sat-row':'DELOAD: 2x6-8 @ RPE 7','sat-cond':'DELOAD: 20 min Zone 2 instead'},5:{'sun-hpc':'Wks 8-10: 5x2 @ RPE 7.5 | 2 min','sun-sq':'Wks 8-10: 4x3-5 @ RPE 8.5 | 3 min','sun-rdl':'Wks 8-10: 3x6 @ RPE 8 | 2.5 min','mon-press':'Wks 8-10: 4x3-5 @ RPE 8.5 | 3 min','mon-pu':'Wks 8-10: Strict attempts x3 + Heavy ecc 3x2 (8-10s)','thu-hps':'Wks 8-10: 4x2 @ RPE 7 | 2 min','thu-dl':'Wks 8-10: 4x3-5 @ RPE 8.5 | 3 min','sat-row':'Wks 8-10: 4x5-6 @ RPE 8.5 | 2.5 min','sat-cond':'Wks 8-10: 4x60s ON / 90s OFF — bike/row hard'},6:{'sun-hpc':'Wks 11-12: 5x2 @ RPE 7.5','sun-sq':'Wks 11-12: 4x3-5 @ RPE 9 | TEST WK12','sun-rdl':'Wks 11-12: 3x6 @ RPE 8','mon-press':'Wks 11-12: 4x3-5 @ RPE 9','mon-pu':'Wks 11-12: PULL-UP MAX TEST x3 sets','thu-hps':'Wks 11-12: 4x2 @ RPE 7','thu-dl':'Wks 11-12: 4x3-5 @ RPE 9 | TEST WK12','sat-row':'Wks 11-12: 4x5-6 @ RPE 8.5','sat-cond':'Wks 11-12: Benchmark WOD for time'}};
+let cDay='sun';
+function setPhase(p){document.querySelectorAll('.phase-btn').forEach((b,i)=>b.classList.toggle('active',i===p-1));document.getElementById('phaseInfo').textContent=phaseData[p];const d=info[p];for(const[k,v]of Object.entries(d)){const e=document.getElementById(k+'-info');if(e)e.textContent=v;}}
+function showDay(d){cDay=d;document.querySelectorAll('.day-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));document.getElementById('day-'+d).classList.add('active');const tabs=document.querySelectorAll('.day-tab');const days=['sun','mon','tue','wed','thu','fri','sat'];tabs[days.indexOf(d)].classList.add('active');}
+function selectRecovery(el){el.parentElement.querySelectorAll('.recovery-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');}
+let tInt=null;function startTimer(btn,sec){if(tInt)clearInterval(tInt);let r=sec;let d=document.createElement('div');d.className='timer-display';btn.parentElement.appendChild(d);const up=()=>{const m=Math.floor(r/60),s=r%60;d.textContent=m+':'+(s<10?'0':'')+s;};up();tInt=setInterval(()=>{r--;if(r<=0){clearInterval(tInt);d.textContent='✅ GO!';setTimeout(()=>d.remove(),2000);return;}up();},1000);}
+function saveData(){const el=document.getElementById('day-'+cDay);const data={};el.querySelectorAll('input,select,textarea').forEach((inp,i)=>{if(inp.type==='checkbox')data[cDay+'_'+i]=inp.checked;else data[cDay+'_'+i]=inp.value;});const key='t_'+cDay+'_'+new Date().toISOString().split('T')[0];localStorage.setItem(key,JSON.stringify(data));const btn=document.querySelector('.save-btn.primary');btn.textContent='✅ Saved!';setTimeout(()=>btn.textContent='💾 Save',1500);}
+function clearDay(){if(!confirm('Clear all?'))return;const el=document.getElementById('day-'+cDay);el.querySelectorAll('input,textarea').forEach(i=>{if(i.type==='checkbox')i.checked=false;else i.value='';});el.querySelectorAll('select').forEach(s=>s.selectedIndex=0);}
+function loadData(){const today=new Date().toISOString().split('T')[0];['sun','mon','tue','wed','thu','fri','sat'].forEach(day=>{const saved=localStorage.getItem('t_'+day+'_'+today);if(saved){const data=JSON.parse(saved);const el=document.getElementById('day-'+day);el.querySelectorAll('input,select,textarea').forEach((inp,i)=>{const v=data[day+'_'+i];if(v!==undefined){if(inp.type==='checkbox')inp.checked=v;else inp.value=v;}});}});}
+const dayMap=['sun','mon','tue','wed','thu','fri','sat'];showDay(dayMap[new Date().getDay()]);loadData();setPhase(1);
+</script>
+</body>
+</html>
