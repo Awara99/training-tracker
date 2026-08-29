@@ -86,6 +86,7 @@
     <button class="phase-btn" onclick="setPhase(6)">Wks 11-12</button>
   </div>
   <div class="week-info" id="phaseInfo">Phase 1: Rebuild — RPE 6-7 — 6-10 reps</div>
+  <div style="text-align:center;margin-top:6px"><button id="deloadBtn" onclick="toggleDeload()" style="padding:6px 14px;border-radius:20px;border:1px solid #f59e0b;background:transparent;color:#f59e0b;font-size:11px;cursor:pointer">🔴 Start Deload (Period)</button></div>
   <div class="date-nav">
     <button class="date-week-btn" onclick="shiftDate(-7)">← Week</button>
     <button class="date-arrow" onclick="shiftDate(-1)">◀</button>
@@ -257,15 +258,47 @@ const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Sat
 const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const PROGRAM_START=new Date(2026,6,19); // July 19, 2026 (month is 0-indexed)
 function getPhaseForDate(d){
+  // Check for manual deload override
+  const deloadStart=localStorage.getItem('deload_start');
+  if(deloadStart){
+    const ds=new Date(deloadStart);
+    const diff2=Math.floor((d.getTime()-ds.getTime())/86400000);
+    if(diff2>=0 && diff2<7){
+      // Determine which deload phase based on program week
+      const progDiff=Math.floor((d.getTime()-PROGRAM_START.getTime())/86400000);
+      const week=Math.floor(progDiff/7)+1;
+      return week<=3?2:4; // Phase 2 (first deload) or Phase 4 (second deload)
+    }
+    if(diff2>=7){localStorage.removeItem('deload_start');updateDeloadBtn();}
+  }
   const diff=Math.floor((d.getTime()-PROGRAM_START.getTime())/86400000);
-  if(diff<0) return 1; // before program starts
-  const week=Math.floor(diff/7)+1; // week 1-12
+  if(diff<0) return 1;
+  const week=Math.floor(diff/7)+1;
   if(week<=2) return 1;
-  if(week===3) return 2;
   if(week<=6) return 3;
-  if(week===7) return 4;
   if(week<=10) return 5;
-  return 6; // weeks 11-12+
+  return 6;
+}
+function toggleDeload(){
+  const existing=localStorage.getItem('deload_start');
+  if(existing){
+    if(confirm('End deload early?')){localStorage.removeItem('deload_start');updateDeloadBtn();updateDateDisplay();}
+  } else {
+    if(confirm('Start deload from today? (7 days)')){localStorage.setItem('deload_start',dateStr(new Date()));updateDeloadBtn();updateDateDisplay();}
+  }
+}
+function updateDeloadBtn(){
+  const btn=document.getElementById('deloadBtn');
+  const existing=localStorage.getItem('deload_start');
+  if(existing){
+    const ds=new Date(existing);
+    const daysLeft=7-Math.floor((new Date().getTime()-ds.getTime())/86400000);
+    btn.textContent='✅ Deload Active ('+daysLeft+'d left) — tap to end';
+    btn.style.background='#f59e0b';btn.style.color='#000';btn.style.borderColor='#f59e0b';
+  } else {
+    btn.textContent='🔴 Start Deload (Period)';
+    btn.style.background='transparent';btn.style.color='#f59e0b';btn.style.borderColor='#f59e0b';
+  }
 }
 function getWeekNum(d){
   const diff=Math.floor((d.getTime()-PROGRAM_START.getTime())/86400000);
@@ -369,7 +402,7 @@ function loadData(){
     if(data._weight){document.getElementById('daily-weight').value=data._weight;}
   }
 }
-const dayMap=['sun','mon','tue','wed','thu','fri','sat'];cDay=dayMap[new Date().getDay()];updateDateDisplay();showDay(cDay);
+const dayMap=['sun','mon','tue','wed','thu','fri','sat'];cDay=dayMap[new Date().getDay()];updateDeloadBtn();updateDateDisplay();showDay(cDay);
 </script>
 </body>
 </html>
