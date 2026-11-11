@@ -76,15 +76,15 @@
 </head>
 <body>
 <div class="header">
-  <h1>12-WEEK PRECONCEPTION PROGRAM</h1>
-  <div class="phase-selector">
+  <h1 id="programTitle">12-WEEK PRECONCEPTION PROGRAM</h1>
+  <div class="phase-selector" id="phaseSelector">
     <button class="phase-btn active" onclick="setPhase(1)">Wks 1-2</button>
     <button class="phase-btn" onclick="setPhase(3)">Wks 3-7</button>
     <button class="phase-btn" onclick="setPhase(5)">Wks 8-10</button>
     <button class="phase-btn" onclick="setPhase(6)">Wks 11-12</button>
   </div>
   <div class="week-info" id="phaseInfo">Phase 1: Rebuild — RPE 6-7 — 6-10 reps</div>
-  <div style="text-align:center;margin-top:6px"><button id="deloadBtn" onclick="toggleDeload()" style="padding:6px 14px;border-radius:20px;border:1px solid #f59e0b;background:transparent;color:#f59e0b;font-size:11px;cursor:pointer">🔴 Start Deload (Period)</button></div>
+  <div id="deloadWrap" style="text-align:center;margin-top:6px"><button id="deloadBtn" onclick="toggleDeload()" style="padding:6px 14px;border-radius:20px;border:1px solid #f59e0b;background:transparent;color:#f59e0b;font-size:11px;cursor:pointer">🔴 Start Deload (Period)</button></div>
   <div class="date-nav">
     <button class="date-week-btn" onclick="shiftDate(-7)">← Week</button>
     <button class="date-arrow" onclick="shiftDate(-1)">◀</button>
@@ -201,6 +201,94 @@
 <!-- SATURDAY -->
 <div class="day-content" id="day-sat"><div class="rest-content"><div class="rest-icon">😴</div><div class="rest-title">REST DAY</div><div class="rest-desc">Walk if desired. Enjoy the weekend. Prioritize sleep.</div></div></div>
 
+<!-- NOV 11-14 RECOVERY RE-ENTRY -->
+<div class="day-content" id="recovery-wed">
+  <div class="section"><div class="section-title">🔄 Wednesday — Full-Body Re-entry</div><div class="section-subtitle">45-55 min | RPE 6 maximum | Use 60-65% of pre-illness loads</div></div>
+  <div class="section"><div class="section-title">Readiness rule</div><div class="exercise-note">No failed reps. If warm-ups feel unusually difficult, remove one set. Stop for fever, chest pain, unusual breathlessness, dizziness, palpitations, or disproportionate fatigue.</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="re-wu-cardio"> Easy row/bike: 4 min</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-squat"> Bodyweight squat: 8</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-hinge"> Empty-bar hinge: 8</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-shoulder"> Band pull-aparts + external rotation: 10 each</li></ul></div>
+  <div class="section"><div class="section-title">A. Hang Power Clean — 3×2</div><div class="exercise-note">Suggested 30-35 kg; fast, crisp reps. Rest 90s.</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" data-key="re-clean-s1" placeholder="kg × reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" data-key="re-clean-s2" placeholder="kg × reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" data-key="re-clean-s3" placeholder="kg × reps"></div></div></div>
+  <div class="section"><div class="section-title">B. Back Squat — 3×5</div><div class="exercise-note">Suggested 40-45 kg; RPE 6. Rest 2-3 min.</div><div class="sets-grid"><div class="set-box"><div class="set-label">S1</div><input class="set-input" data-key="re-squat-s1" placeholder="kg × reps"></div><div class="set-box"><div class="set-label">S2</div><input class="set-input" data-key="re-squat-s2" placeholder="kg × reps"></div><div class="set-box"><div class="set-label">S3</div><input class="set-input" data-key="re-squat-s3" placeholder="kg × reps"></div></div></div>
+  <div class="section"><div class="section-title">C. Upper Superset — 2 rounds</div><div class="exercise-note">Rest 90s after both exercises.</div><div class="exercise"><div class="exercise-name">C1. DB Bench Press — 2×8</div><div class="sets-grid"><input class="set-input" data-key="re-bench-s1" placeholder="S1 kg/hand"><input class="set-input" data-key="re-bench-s2" placeholder="S2 kg/hand"></div></div><div class="exercise"><div class="exercise-name">C2. One-Arm DB Row — 2×8/arm</div><div class="sets-grid"><input class="set-input" data-key="re-row-s1" placeholder="S1 kg"><input class="set-input" data-key="re-row-s2" placeholder="S2 kg"></div></div></div>
+  <div class="section"><div class="section-title">D. Core — 2 rounds</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="re-deadbug"> Weighted dead bug + pullover: 2×6/side</li><li><input type="checkbox" class="warmup-check" data-key="re-suitcase"> Suitcase carry: 2×25-30m/side</li></ul></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Energy, breathing, loads, and recovery response"></textarea></div>
+</div>
+
+<div class="day-content" id="recovery-thu">
+  <div class="section"><div class="section-title">💙 Thursday — Aerobic Recovery</div><div class="section-subtitle">30-45 min | Restore the engine without fatigue</div></div>
+  <div class="section"><div class="section-title">A. Zone 2</div><div class="exercise-note">25-35 min bike, row, incline walk, or easy jog. Conversational pace; RPE 4-5.</div><input class="set-input" data-key="re-z2-result" placeholder="Mode / time / distance / average HR"></div>
+  <div class="section"><div class="section-title">B. Mobility (8-10 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="re-mob-90"> 90/90 hip switches: 8</li><li><input type="checkbox" class="warmup-check" data-key="re-mob-couch"> Couch stretch: 30s/side</li><li><input type="checkbox" class="warmup-check" data-key="re-mob-open"> Open-book rotation: 6/side</li><li><input type="checkbox" class="warmup-check" data-key="re-mob-wall"> Wall slides: 10</li></ul></div>
+  <div class="section"><div class="section-title">Optional Pull-Up Pattern</div><div class="exercise-note">Only if shoulders and energy feel normal: light-band pull-ups 2×5, 3 reps in reserve.</div><div class="sets-grid"><input class="set-input" data-key="re-bandpu-s1" placeholder="S1 reps"><input class="set-input" data-key="re-bandpu-s2" placeholder="S2 reps"></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Breathing, energy, and any post-viral symptoms"></textarea></div>
+</div>
+
+<div class="day-content" id="recovery-fri">
+  <div class="section"><div class="section-title">💪 Friday — Upper Re-entry + Pull-Ups</div><div class="section-subtitle">45-55 min | RPE 6-7 | No grinding</div></div>
+  <div class="section"><div class="section-title">Warm-Up (7 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="re-wu-row"> Easy row: 3 min</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-pullapart"> Band pull-aparts: 15</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-extrot"> External rotation: 10/side</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-press"> Empty-bar press: 8</li></ul></div>
+  <div class="section"><div class="section-title">A. Pull-Up Singles — 3-4×1</div><div class="exercise-note">Rest 2-3 min. Stop after the first grind or failed rep; use a light band instead if needed.</div><div class="sets-grid"><input class="set-input" data-key="re-pu-s1" placeholder="S1"><input class="set-input" data-key="re-pu-s2" placeholder="S2"><input class="set-input" data-key="re-pu-s3" placeholder="S3"><input class="set-input" data-key="re-pu-s4" placeholder="Optional S4"></div></div>
+  <div class="section"><div class="section-title">B. Strict Press — 3×5</div><div class="exercise-note">Suggested 22.5-25 kg; RPE 6-7. Rest 2 min.</div><div class="sets-grid"><input class="set-input" data-key="re-press-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="re-press-s2" placeholder="S2 kg × reps"><input class="set-input" data-key="re-press-s3" placeholder="S3 kg × reps"></div></div>
+  <div class="section"><div class="section-title">C. DB Bench + Row — 2 rounds</div><div class="exercise"><div class="exercise-name">DB Bench — 2×8-10</div><div class="sets-grid"><input class="set-input" data-key="re-bench-s1" placeholder="S1 kg/hand"><input class="set-input" data-key="re-bench-s2" placeholder="S2 kg/hand"></div></div><div class="exercise"><div class="exercise-name">One-Arm DB Row — 2×8-10</div><div class="sets-grid"><input class="set-input" data-key="re-row-s1" placeholder="S1 kg"><input class="set-input" data-key="re-row-s2" placeholder="S2 kg"></div></div></div>
+  <div class="section"><div class="section-title">D. Accessories — 2 rounds</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="re-lateral"> Lateral raise: 2×12-15</li><li><input type="checkbox" class="warmup-check" data-key="re-triceps"> Overhead triceps extension: 2×10-12</li><li><input type="checkbox" class="warmup-check" data-key="re-curl"> Incline DB curl: 2×10</li></ul></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Pull-up quality, energy, and loads"></textarea></div>
+</div>
+
+<div class="day-content" id="recovery-sat">
+  <div class="section"><div class="section-title">🔥 Saturday — Lower Re-entry + Easy Circuit</div><div class="section-subtitle">50-60 min | RPE 6-7 | Finish fresher than you started</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="re-wu-bike"> Bike/row: 4 min</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-hinge"> Empty-bar hinge: 8</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-squat"> Goblet squat: 8</li><li><input type="checkbox" class="warmup-check" data-key="re-wu-bridge"> Glute bridge: 10</li></ul></div>
+  <div class="section"><div class="section-title">A. Deadlift — 3×4</div><div class="exercise-note">Suggested 42.5-50 kg; smooth reps. Rest 2-3 min.</div><div class="sets-grid"><input class="set-input" data-key="re-dl-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="re-dl-s2" placeholder="S2 kg × reps"><input class="set-input" data-key="re-dl-s3" placeholder="S3 kg × reps"></div></div>
+  <div class="section"><div class="section-title">B. Front Squat — 2×5</div><div class="exercise-note">Suggested 35-40 kg; RPE 6-7. Rest 2 min.</div><div class="sets-grid"><input class="set-input" data-key="re-fs-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="re-fs-s2" placeholder="S2 kg × reps"></div></div>
+  <div class="section"><div class="section-title">C. Hip Thrust — 2×10</div><div class="sets-grid"><input class="set-input" data-key="re-ht-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="re-ht-s2" placeholder="S2 kg × reps"></div></div>
+  <div class="section"><div class="section-title">D. Re-entry Circuit — 8 min</div><div class="exercise-note">Easy continuous pace, RPE ≤7: 10 light KB swings + 10 wall balls + 8 step-ups. No burpees this week.</div><input class="set-input" data-key="re-cond-result" placeholder="Rounds + load + RPE"></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Energy during and 2-4 hours after training"></textarea></div>
+</div>
+
+<!-- NOVEMBER MUSCLE + PULL-UP + ENGINE PROGRAM (STARTS NOV 15) -->
+<div class="day-content" id="nov-sun">
+  <div class="section"><div class="section-title">☀️ Sunday — Squat Strength + Core</div><div class="section-subtitle">55-60 min | Strength and muscle | Week 1 RPE 7</div></div>
+  <div class="section"><div class="section-title">Progression</div><div class="exercise-note">Weeks 1-2: rebuild at RPE 7. Weeks 3-4: RPE 7.5-8. Add reps first; add 2-2.5 kg only after every set is clean. Cut the optional accessory if the session reaches 60 min.</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="nov-wu-cardio"> Row/bike: 3 min</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-squat"> Goblet squat: 8</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-hinge"> Empty-bar RDL: 8</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-hip"> 90/90 switch: 6/side</li></ul></div>
+  <div class="section"><div class="section-title">A. Hang Power Clean — 3×2</div><div class="exercise-note">Fast and technical; 70-80% of your best. Rest 90-120s.</div><div class="sets-grid"><input class="set-input" data-key="nov-clean-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="nov-clean-s2" placeholder="S2 kg × reps"><input class="set-input" data-key="nov-clean-s3" placeholder="S3 kg × reps"></div></div>
+  <div class="section"><div class="section-title">B. Back Squat — 3×4-6</div><div class="exercise-note">Rest 2.5-3 min. Start below your 65 kg peak and leave 2-3 reps in reserve in Week 1.</div><div class="sets-grid"><input class="set-input" data-key="nov-squat-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="nov-squat-s2" placeholder="S2 kg × reps"><input class="set-input" data-key="nov-squat-s3" placeholder="S3 kg × reps"></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select" data-key="nov-squat-rpe"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option></select></div></div>
+  <div class="section"><div class="section-title">C. Romanian Deadlift — 2×6-8</div><div class="exercise-note">Controlled 3-second lowering; stop if the prior hip/leg symptoms return. Rest 2 min.</div><div class="sets-grid"><input class="set-input" data-key="nov-rdl-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="nov-rdl-s2" placeholder="S2 kg × reps"></div></div>
+  <div class="section"><div class="section-title">D. Choose One — 2 sets</div><div class="exercise-note">Alternate weekly. Week A: Bulgarian split squat 2×8/leg. Week B: hip thrust 2×8-12.</div><div class="sets-grid"><input class="set-input" data-key="nov-accessory-s1" placeholder="Exercise / S1"><input class="set-input" data-key="nov-accessory-s2" placeholder="Exercise / S2"></div></div>
+  <div class="section"><div class="section-title">E. Core Strength — 3 rounds</div><div class="exercise"><div class="exercise-name">Weighted dead bug + DB pullover — 3×6-8/side</div><div class="sets-grid"><input class="set-input" data-key="nov-deadbug-s1" placeholder="S1 kg/reps"><input class="set-input" data-key="nov-deadbug-s2" placeholder="S2 kg/reps"><input class="set-input" data-key="nov-deadbug-s3" placeholder="S3 kg/reps"></div></div><div class="exercise"><div class="exercise-name">Heavy suitcase carry — 3×30-40m/side</div><div class="sets-grid"><input class="set-input" data-key="nov-suitcase-s1" placeholder="S1 kg/distance"><input class="set-input" data-key="nov-suitcase-s2" placeholder="S2 kg/distance"><input class="set-input" data-key="nov-suitcase-s3" placeholder="S3 kg/distance"></div></div><div class="exercise-note">Progress load or distance only while ribs stay stacked over pelvis and you can breathe behind the brace.</div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Loads, RPE, technique, and session duration"></textarea></div>
+</div>
+
+<div class="day-content" id="nov-mon">
+  <div class="section"><div class="section-title">💪 Monday — Pull-Up + Upper Strength</div><div class="section-subtitle">50-60 min | Pull-ups performed fresh</div></div>
+  <div class="section"><div class="section-title">Warm-Up (7 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="nov-wu-row"> Easy row: 3 min</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-pullapart"> Band pull-aparts: 15</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-extrot"> External rotation: 10/side</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-press"> Empty-bar press: 8</li></ul></div>
+  <div class="section"><div class="section-title">A. Unassisted Pull-Ups — Strength</div><div class="exercise-note">Rest 2.5-3 min. Week 1: 4 clean singles. Then progress to 2,1,1,1 → 2,2,1 → 3,1,1. Stop before failure; bent knees are fine, kicking is not.</div><div class="sets-grid"><input class="set-input" data-key="nov-pu-s1" placeholder="S1 reps"><input class="set-input" data-key="nov-pu-s2" placeholder="S2 reps"><input class="set-input" data-key="nov-pu-s3" placeholder="S3 reps"><input class="set-input" data-key="nov-pu-s4" placeholder="S4 reps"></div></div>
+  <div class="section"><div class="section-title">B. Strict Press — 3×4-6</div><div class="exercise-note">Rest 2-3 min; add reps before load.</div><div class="sets-grid"><input class="set-input" data-key="nov-press-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="nov-press-s2" placeholder="S2 kg × reps"><input class="set-input" data-key="nov-press-s3" placeholder="S3 kg × reps"></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select" data-key="nov-press-rpe"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option></select></div></div>
+  <div class="section"><div class="section-title">C. DB Bench + One-Arm Row — 3 rounds</div><div class="exercise"><div class="exercise-name">DB Bench — 3×8-10</div><div class="sets-grid"><input class="set-input" data-key="nov-bench-s1" placeholder="S1"><input class="set-input" data-key="nov-bench-s2" placeholder="S2"><input class="set-input" data-key="nov-bench-s3" placeholder="S3"></div></div><div class="exercise"><div class="exercise-name">One-Arm DB Row — 3×8/arm</div><div class="sets-grid"><input class="set-input" data-key="nov-row-s1" placeholder="S1"><input class="set-input" data-key="nov-row-s2" placeholder="S2"><input class="set-input" data-key="nov-row-s3" placeholder="S3"></div></div><div class="exercise-note">Rest 90s after both exercises.</div></div>
+  <div class="section"><div class="section-title">D. Arms + Shoulders — 2 rounds</div><div class="exercise-note">Controlled tempo. Cut this block first if approaching 60 min.</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="nov-lateral"> Lateral raise: 2×12-15</li><li><input type="checkbox" class="warmup-check" data-key="nov-triceps"> Overhead triceps extension: 2×10-12</li><li><input type="checkbox" class="warmup-check" data-key="nov-curl"> Incline DB curl: 2×10</li></ul></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Pull-up quality, loads, RPE, and duration"></textarea></div>
+</div>
+
+<div class="day-content" id="nov-tue"><div class="rest-content"><div class="rest-icon">💙</div><div class="rest-title">OPTIONAL ZONE 2 / RECOVERY</div><div class="rest-desc">25-40 min conversational bike, row, incline walk, or easy run. Keep RPE 4-5. Skip it if sleep or recovery is poor.</div></div></div>
+
+<div class="day-content" id="nov-wed">
+  <div class="section"><div class="section-title">🔥 Wednesday — Deadlift + Power + Core</div><div class="section-subtitle">50-60 min | Alternate snatch and split jerk weekly</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="nov-wu-cardio"> Bike/row: 3 min</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-hinge"> Empty-bar hinge: 8</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-front"> Front-rack squat: 6</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-shoulder"> PVC pass-through + external rotation: 10 each</li></ul></div>
+  <div class="section"><div class="section-title">A. Power — 3×2</div><div class="exercise-note">Week A: hang power snatch. Week B: split jerk. Technical reps only; rest 90-120s.</div><div class="sets-grid"><input class="set-input" data-key="nov-power-s1" placeholder="Exercise / S1"><input class="set-input" data-key="nov-power-s2" placeholder="S2"><input class="set-input" data-key="nov-power-s3" placeholder="S3"></div></div>
+  <div class="section"><div class="section-title">B. Deadlift — 3×3-5</div><div class="exercise-note">Start below 70 kg after illness; rest 2.5-3 min. No grinding.</div><div class="sets-grid"><input class="set-input" data-key="nov-dl-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="nov-dl-s2" placeholder="S2 kg × reps"><input class="set-input" data-key="nov-dl-s3" placeholder="S3 kg × reps"></div><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select" data-key="nov-dl-rpe"><option>-</option><option>6</option><option>6.5</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option></select></div></div>
+  <div class="section"><div class="section-title">C. Front Squat — 2×4-6</div><div class="sets-grid"><input class="set-input" data-key="nov-fs-s1" placeholder="S1 kg × reps"><input class="set-input" data-key="nov-fs-s2" placeholder="S2 kg × reps"></div></div>
+  <div class="section"><div class="section-title">D. Choose One — 2×8/leg</div><div class="exercise-note">Walking lunge OR landmine single-leg RDL. Choose the pain-free option and alternate weekly.</div><div class="sets-grid"><input class="set-input" data-key="nov-unilateral-s1" placeholder="Exercise / S1"><input class="set-input" data-key="nov-unilateral-s2" placeholder="Exercise / S2"></div></div>
+  <div class="section"><div class="section-title">E. Core Strength — 3 rounds</div><div class="exercise"><div class="exercise-name">Front-rack carry — 3×30-40m</div><div class="sets-grid"><input class="set-input" data-key="nov-frcarry-s1" placeholder="S1 load/distance"><input class="set-input" data-key="nov-frcarry-s2" placeholder="S2 load/distance"><input class="set-input" data-key="nov-frcarry-s3" placeholder="S3 load/distance"></div></div><div class="exercise"><div class="exercise-name">Half-kneeling kettlebell halo — 3×5 each direction</div><div class="sets-grid"><input class="set-input" data-key="nov-halo-s1" placeholder="S1 kg"><input class="set-input" data-key="nov-halo-s2" placeholder="S2 kg"><input class="set-input" data-key="nov-halo-s3" placeholder="S3 kg"></div></div><div class="exercise-note">Keep glutes engaged, ribs stacked, and torso motionless. Stop for shoulder pinching.</div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Power variation, loads, core control, and duration"></textarea></div>
+</div>
+
+<div class="day-content" id="nov-thu">
+  <div class="section"><div class="section-title">⚡ Thursday — Pull-Up Volume + HIIT</div><div class="section-subtitle">45-55 min | One hard conditioning exposure per week</div></div>
+  <div class="section"><div class="section-title">Warm-Up (8 min)</div><ul class="warmup-list"><li><input type="checkbox" class="warmup-check" data-key="nov-wu-cardio"> Row/bike: 4 min progressive</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-pullapart"> Band pull-aparts: 15</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-extrot"> External rotation: 10/side</li><li><input type="checkbox" class="warmup-check" data-key="nov-wu-swing"> Light KB swings: 10</li></ul></div>
+  <div class="section"><div class="section-title">A. Light-Band Pull-Ups — 3×4-6</div><div class="exercise-note">Use the 4-5 kg assistance band. Identical clean path every rep; stop with 2 reps in reserve. Rest 2 min.</div><div class="sets-grid"><input class="set-input" data-key="nov-bandpu-s1" placeholder="S1 reps"><input class="set-input" data-key="nov-bandpu-s2" placeholder="S2 reps"><input class="set-input" data-key="nov-bandpu-s3" placeholder="S3 reps"></div></div>
+  <div class="section"><div class="section-title">B. Row Variation — 3×8-10</div><div class="exercise-note">Cable row, chest-supported DB row, or ring row. Avoid adding another fatiguing bent-over hinge.</div><div class="sets-grid"><input class="set-input" data-key="nov-row-s1" placeholder="Exercise / S1"><input class="set-input" data-key="nov-row-s2" placeholder="S2"><input class="set-input" data-key="nov-row-s3" placeholder="S3"></div></div>
+  <div class="section"><div class="section-title">C. HIIT — 12-16 min</div><div class="exercise-note"><strong>Week 1:</strong> 12-min AMRAP — 10 KB swings + 8 DB thrusters + 8 burpees.<br><strong>Week 2:</strong> 5 rounds — 12 wall balls + 10 KB swings + 200m run.<br><strong>Week 3:</strong> 4 rounds — 8 barbell thrusters + 10 burpees + 12-cal row.<br><strong>Week 4:</strong> EMOM 15 — wall balls / swings / burpees. Use repeatable loads; RPE 8-9, not all-out.</div><input class="set-input" data-key="nov-hiit-result" placeholder="Week / result / loads"><div class="rpe-row"><span class="rpe-label">RPE:</span><select class="rpe-select" data-key="nov-hiit-rpe"><option>-</option><option>7</option><option>7.5</option><option>8</option><option>8.5</option><option>9</option></select></div></div>
+  <div class="section"><div class="section-title">📝 Notes</div><textarea class="notes-area" data-key="notes" placeholder="Pull-up quality, HIIT pacing, heart rate, and recovery"></textarea></div>
+</div>
+
+<div class="day-content" id="nov-fri"><div class="rest-content"><div class="rest-icon">😴</div><div class="rest-title">REST DAY</div><div class="rest-desc">Easy walking is fine. No compensatory cardio. Prioritize food, hydration, and sleep.</div></div></div>
+<div class="day-content" id="nov-sat"><div class="rest-content"><div class="rest-icon">😴</div><div class="rest-title">REST / OPTIONAL ZONE 2</div><div class="rest-desc">Rest by default. If Tuesday Zone 2 was skipped and recovery is good, perform 25-40 min conversational cardio.</div></div></div>
+
 <!-- DAILY CHECKLIST -->
 <div class="section" style="margin:16px;background:#1a2332;border:1px solid #2563eb">
   <div class="section-title">⚖️ Morning Weigh-In</div>
@@ -234,16 +322,45 @@ let cDay='sun';
 function setPhase(p){const btnMap=[1,3,5,6];document.querySelectorAll('.phase-btn').forEach((b,i)=>b.classList.toggle('active',btnMap[i]===p));document.getElementById('phaseInfo').textContent=phaseData[p];const d=info[p];if(!d)return;const wk=getWeekNum(viewDate);for(const[k,v]of Object.entries(d)){if(k.includes('-wk'))continue;const e=document.getElementById(k+'-info');if(e){const wkKey=k+'-wk'+wk;if(d[wkKey]){e.textContent=d[wkKey];}else{e.textContent=v;}}}
   const ct=document.getElementById('fri-cond-title');if(ct){ct.textContent=wk>=6?'D. Conditioning — COMP PREP (10-15 min)':'D. Conditioning (10-15 min)';}
 }
-function showDay(d){
-  // Save current day data before switching (skip if same day or first load)
-  if(cDay && cDay!==d){autoSave();}
-  cDay=d;
+const RECOVERY_START=new Date(2026,10,11);
+const NEW_PROGRAM_START=new Date(2026,10,15);
+const dayKeys=['sun','mon','tue','wed','thu','fri','sat'];
+function getProgramMode(d){
+  const ds=dateStr(d);
+  if(ds>='2026-11-11'&&ds<='2026-11-14')return 'recovery';
+  if(ds>='2026-11-15')return 'november';
+  return 'legacy';
+}
+function getNewProgramWeek(d){return Math.max(1,Math.floor((d.getTime()-NEW_PROGRAM_START.getTime())/604800000)+1);}
+function resolveDayContentId(d,dayKey){
+  const mode=getProgramMode(d);
+  if(mode==='recovery')return 'recovery-'+dayKey;
+  if(mode==='november')return 'nov-'+dayKey;
+  return 'day-'+dayKey;
+}
+function getCurrentDayElement(){return document.querySelector('.day-content.active');}
+function activateCurrentDay(){
   document.querySelectorAll('.day-content').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('day-'+d).classList.add('active');
+  document.querySelectorAll('.day-tab').forEach(t=>{t.classList.remove('active');t.classList.remove('rest-day');});
+  const id=resolveDayContentId(viewDate,cDay);
+  const panel=document.getElementById(id)||document.getElementById('day-'+cDay);
+  panel.classList.add('active');
   const tabs=document.querySelectorAll('.day-tab');
-  const days=['sun','mon','tue','wed','thu','fri','sat'];
-  tabs[days.indexOf(d)].classList.add('active');
+  const activeIndex=dayKeys.indexOf(cDay);
+  tabs[activeIndex].classList.add('active');
+  const mode=getProgramMode(viewDate);
+  const restDays=mode==='november'?['tue','fri','sat']:mode==='recovery'?['sun','mon','tue']:['tue','wed','sat'];
+  tabs.forEach((tab,i)=>tab.classList.toggle('rest-day',restDays.includes(dayKeys[i])));
+}
+function showDay(d,syncDate=true){
+  if(cDay){autoSave();}
+  if(syncDate){
+    const targetIndex=dayKeys.indexOf(d);
+    viewDate=new Date(viewDate.getTime()+(targetIndex-viewDate.getDay())*86400000);
+  }
+  cDay=d;
+  updateDateDisplay();
+  activateCurrentDay();
   clearCurrentFields();
   loadCurrentDay();
 }
@@ -308,44 +425,45 @@ function updateDateDisplay(){
   const disp=document.getElementById('dateDisplay');
   const sub=document.getElementById('dateSub');
   const tbtn=document.getElementById('todayBtn');
+  const mode=getProgramMode(viewDate);
   const wk=getWeekNum(viewDate);
-  const wkLabel=wk>0&&wk<=12?' — Week '+wk:wk>12?' — Post-program':'';
+  const wkLabel=mode==='recovery'?' — Recovery Re-entry':mode==='november'?' — Build Week '+getNewProgramWeek(viewDate):wk>0&&wk<=12?' — Week '+wk:wk>12?' — Post-program':'';
   if(isToday){disp.textContent='📅 Today';sub.textContent=dateStr(viewDate)+wkLabel;} else {disp.textContent=dayNames[viewDate.getDay()]+', '+monthNames[viewDate.getMonth()]+' '+viewDate.getDate();sub.textContent=wkLabel.trim();}
   tbtn.classList.toggle('on-today',isToday);
-  // Auto-switch phase
-  const autoPhase=getPhaseForDate(viewDate);
-  setPhase(autoPhase);
+  const phaseSelector=document.getElementById('phaseSelector');
+  const deloadWrap=document.getElementById('deloadWrap');
+  const title=document.getElementById('programTitle');
+  if(mode==='legacy'){
+    phaseSelector.style.display='flex';deloadWrap.style.display='block';title.textContent='12-WEEK PRECONCEPTION PROGRAM';
+    setPhase(getPhaseForDate(viewDate));
+  }else if(mode==='recovery'){
+    phaseSelector.style.display='none';deloadWrap.style.display='none';title.textContent='RECOVERY RE-ENTRY';
+    document.getElementById('phaseInfo').textContent='Nov 11-14 — restore movement, breathing, and training tolerance — RPE 6-7';
+  }else{
+    phaseSelector.style.display='none';deloadWrap.style.display='none';title.textContent='STRENGTH + PULL-UPS + ENGINE';
+    document.getElementById('phaseInfo').textContent='Build Week '+getNewProgramWeek(viewDate)+' — 4 sessions under 60 min — add reps before load';
+  }
 }
 function shiftDate(days){
   autoSave();
   viewDate=new Date(viewDate.getTime()+days*86400000);
+  cDay=dayKeys[viewDate.getDay()];
   updateDateDisplay();
-  const dayMap2=['sun','mon','tue','wed','thu','fri','sat'];
-  cDay=dayMap2[viewDate.getDay()];
-  document.querySelectorAll('.day-content').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('day-'+cDay).classList.add('active');
-  const tabs=document.querySelectorAll('.day-tab');
-  tabs[viewDate.getDay()].classList.add('active');
+  activateCurrentDay();
   clearCurrentFields();
   loadCurrentDay();
 }
 function goToday(){
   autoSave();
   viewDate=new Date();
+  cDay=dayKeys[viewDate.getDay()];
   updateDateDisplay();
-  const dayMap2=['sun','mon','tue','wed','thu','fri','sat'];
-  cDay=dayMap2[viewDate.getDay()];
-  document.querySelectorAll('.day-content').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('day-'+cDay).classList.add('active');
-  const tabs=document.querySelectorAll('.day-tab');
-  tabs[viewDate.getDay()].classList.add('active');
+  activateCurrentDay();
   clearCurrentFields();
   loadCurrentDay();
 }
 function clearCurrentFields(){
-  const el=document.getElementById('day-'+cDay);
+  const el=getCurrentDayElement();
   el.querySelectorAll('input,textarea').forEach(i=>{if(i.type==='checkbox')i.checked=false;else i.value='';});
   el.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
   document.querySelectorAll('.checklist input[type=checkbox]').forEach(c=>c.checked=false);
@@ -353,7 +471,8 @@ function clearCurrentFields(){
 }
 function autoSave(){
   const ds=dateStr(viewDate);
-  const el=document.getElementById('day-'+cDay);
+  const el=getCurrentDayElement();
+  if(!el)return;
   const data={};
   let hasData=false;
   el.querySelectorAll('[data-key]').forEach(inp=>{
@@ -369,7 +488,7 @@ function autoSave(){
 }
 function saveData(){
   const ds=dateStr(viewDate);
-  const el=document.getElementById('day-'+cDay);const data={};
+  const el=getCurrentDayElement();const data={};
   el.querySelectorAll('[data-key]').forEach(inp=>{
     const k=inp.getAttribute('data-key');
     if(inp.type==='checkbox')data[k]=inp.checked;else data[k]=inp.value;
@@ -385,7 +504,7 @@ function loadCurrentDay(){
   const saved=localStorage.getItem('t_'+cDay+'_'+ds);
   if(saved){
     const data=JSON.parse(saved);
-    const el=document.getElementById('day-'+cDay);
+    const el=getCurrentDayElement();
     let usedKeys=false;
     el.querySelectorAll('[data-key]').forEach(inp=>{
       const k=inp.getAttribute('data-key');
@@ -408,7 +527,7 @@ function loadData(){
   const saved=localStorage.getItem('t_'+cDay+'_'+ds);
   if(saved){
     const data=JSON.parse(saved);
-    const el=document.getElementById('day-'+cDay);
+    const el=getCurrentDayElement();
     let usedKeys=false;
     el.querySelectorAll('[data-key]').forEach(inp=>{
       const k=inp.getAttribute('data-key');
@@ -425,7 +544,7 @@ function loadData(){
     if(data._weight){document.getElementById('daily-weight').value=data._weight;}
   }
 }
-const dayMap=['sun','mon','tue','wed','thu','fri','sat'];cDay=dayMap[new Date().getDay()];updateDeloadBtn();updateDateDisplay();showDay(cDay);
+const dayMap=['sun','mon','tue','wed','thu','fri','sat'];cDay=dayMap[new Date().getDay()];updateDeloadBtn();updateDateDisplay();activateCurrentDay();clearCurrentFields();loadCurrentDay();
 </script>
 </body>
 </html>
